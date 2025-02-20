@@ -44,6 +44,13 @@ jobs:
           output_location: "dist"
           github_id_token: ${{ env.ID_TOKEN }}
 
+      - name: Run Lighthouse CI on the build
+        uses: treosh/lighthouse-ci-action@v3
+        with:
+          urls: 'https://<your-deployed-app-url>'
+          uploadArtifacts: 'false' # Optionnel: pour ne pas uploader les artefacts
+          configPath: '.lighthouserc.json'  # Si tu as un fichier de configuration personnalisé Lighthouse
+
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
