@@ -25,12 +25,10 @@ jobs:
           lfs: false
           fetch-depth: 0
 
-      - name: Install jq (JSON parser)
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Get ID Token
         id: idtoken
-        run: echo "ID_TOKEN=$(curl -sSL -H \"Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \"$ACTIONS_ID_TOKEN_REQUEST_URL\" | jq -r '.value')" >> $GITHUB_ENV
+        run: |
+          echo "ID_TOKEN=$(curl -sSL -H \"Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \"$ACTIONS_ID_TOKEN_REQUEST_URL\" | jq -r '.value')" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
