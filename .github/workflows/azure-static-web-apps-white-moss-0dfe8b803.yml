@@ -24,13 +24,8 @@ jobs:
           lfs: false
 
       - name: Get Id Token
-        uses: actions/github-script@v6
         id: idtoken
-        with:
-          script: |
-            const id_token = await github.getOIDCToken();
-            return id_token;
-          result-encoding: string
+        run: echo "ID_TOKEN=$(curl -H 'Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN' -H 'Accept: application/json; api-version=2.0' $ACTIONS_ID_TOKEN_REQUEST_URL | jq -r '.value')" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
@@ -40,8 +35,8 @@ jobs:
           action: "upload"
           app_location: "./todo-app/src/frontend"
           api_location: ""
-          output_location: "dist" # Mets ici le dossier de build correct si besoin
-          github_id_token: ${{ steps.idtoken.outputs.result }}
+          output_location: "dist"
+          github_id_token: ${{ env.ID_TOKEN }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
