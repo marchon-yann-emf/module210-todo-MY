@@ -15,9 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Log in to Exoscale Registry
-        run: echo "${{ secrets.SECRET_KEY_PWD }}" | docker login -u "${{ secrets.SECRET_LOGIN }}" --password-stdin ${{ secrets.SECRET }}
+        run: echo "${{ secrets.EXOSCALE_PASSWORD }}" | docker login -u "${{ secrets.EXOSCALE_USERNAME }}" --password-stdin ${{ secrets.REGISTRY }}
       - name: Build Docker image
         working-directory: ./src/backend
-        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+        run: docker build -t ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:latest .
       - name: Push Docker image
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest            
+        run: docker push ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_NAME }}:latest            
