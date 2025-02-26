@@ -1,6 +1,5 @@
 name: Build and push Docker image to Exoscale
-
-on:
+env.
   push:
     branches:
       - main
