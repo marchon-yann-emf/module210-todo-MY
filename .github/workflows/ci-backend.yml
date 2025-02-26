@@ -1,0 +1,23 @@
+name: Build and push Docker image to Exoscale
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/backend/**'  # Déclenche uniquement si du code dans backend/ est modifié
+env:
+  REGISTRY: exo.container-registry.com
+  IMAGE_NAME: c213-emf/todo-app-marchon
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Log in to Exoscale Registry
+        run: echo "${{ secrets.SECRET_KEY_PWD }}" | docker login -u "${{ secrets.SECRET_LOGIN }}" --password-stdin ${{ secrets.SECRET }}
+      - name: Build Docker image
+        working-directory: ./src/backend
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+      - name: Push Docker image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest            
